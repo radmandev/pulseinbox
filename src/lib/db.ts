@@ -9,7 +9,8 @@ function buildSql(): postgres.Sql {
     max: 10,
     idle_timeout: 20,
     connect_timeout: 10,
-    ssl: url.includes('supabase.co') ? { rejectUnauthorized: false } : undefined,
+    // Covers both direct (db.*.supabase.co) and pooler (*.pooler.supabase.com)
+    ssl: url.includes('supabase') ? { rejectUnauthorized: false } : undefined,
   })
 }
 
