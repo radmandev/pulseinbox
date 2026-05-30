@@ -1,4 +1,9 @@
 // Entry point for Hostinger hPanel Node.js (Passenger)
+
+// Force IPv4 for all DNS lookups — Hostinger resolves some hostnames (e.g.
+// Supabase) to IPv6 addresses that are unreachable from this network.
+require('dns').setDefaultResultOrder('ipv4first')
+
 const { createServer } = require('http')
 const { parse } = require('url')
 const next = require('next')
