@@ -6,17 +6,21 @@ function buildSql(): postgres.Sql {
   const url = process.env.DATABASE_URL
   if (!url) throw new Error('DATABASE_URL environment variable is not set')
 
-  // Parse the URL explicitly so the password is passed as a raw string
-  // (no URL-encoding ambiguity). new URL() percent-decodes .username and
-  // .password automatically, which is exactly what postgres.js needs.
   const parsed = new URL(url)
+
+  // DB_PASSWORD lets you provide the raw password without URL-encoding.
+  // Some hosting environments corrupt %-encoded characters in env var values.
+  const password =
+    process.env.DB_PASSWORD ?? decodeURIComponent(parsed.password)
+
+  console.log(`[db] connecting to ${parsed.hostname}:${parsed.port} as ${parsed.username} | pw_len=${password.length}`)
 
   return postgres({
     host:     parsed.hostname,
     port:     parseInt(parsed.port || '5432', 10),
     database: parsed.pathname.replace(/^\//, ''),
     username: parsed.username,
-    password: decodeURIComponent(parsed.password),  // new URL() doesn't decode non-http schemes
+    password,
     max:      10,
     idle_timeout:    20,
     connect_timeout: 10,
