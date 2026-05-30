@@ -25,6 +25,6 @@
     "typescript": "^5"
   },
   "pnpm": {
-    "allowedBuildScripts": ["*"]
+    "allowedBuildScripts": ["*", "unrs-resolver", "@unrs/resolver"]
   }
 }

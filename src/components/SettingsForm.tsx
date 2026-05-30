@@ -14,11 +14,13 @@ export default function SettingsForm() {
   const [config, setConfig] = useState<ConfigState | null>(null)
   const [status, setStatus] = useState<'idle' | 'saving' | 'success' | 'error'>('idle')
   const [errorMsg, setErrorMsg] = useState('')
+  const [webhookUrl, setWebhookUrl] = useState('')
 
-  const webhookUrl =
-    (typeof window !== 'undefined'
-      ? process.env.NEXT_PUBLIC_APP_URL ?? window.location.origin
-      : '') + '/api/webhook/sendpulse'
+  // Set webhook URL only on client side to avoid SSR mismatch
+  useEffect(() => {
+    const origin = window.location.origin
+    setWebhookUrl(`${origin}/api/webhook/sendpulse`)
+  }, [])
 
   useEffect(() => {
     fetch('/api/config')
@@ -80,7 +82,7 @@ export default function SettingsForm() {
   }
 
   function copyWebhookUrl() {
-    navigator.clipboard.writeText(webhookUrl).catch(() => {})
+    if (webhookUrl) navigator.clipboard.writeText(webhookUrl).catch(() => {})
   }
 
   return (
@@ -123,11 +125,13 @@ export default function SettingsForm() {
           <input
             readOnly
             value={webhookUrl}
+            placeholder="Loading…"
             className="flex-1 px-3 py-2 text-sm border border-gray-300 rounded-lg bg-gray-50 text-gray-600 font-mono"
           />
           <button
             onClick={copyWebhookUrl}
-            className="px-3 py-2 text-sm bg-gray-100 hover:bg-gray-200 border border-gray-300 rounded-lg transition-colors"
+            disabled={!webhookUrl}
+            className="px-3 py-2 text-sm bg-gray-100 hover:bg-gray-200 border border-gray-300 rounded-lg transition-colors disabled:opacity-40"
           >
             Copy
           </button>
