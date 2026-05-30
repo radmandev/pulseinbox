@@ -7,7 +7,17 @@ const next = require('next')
 
 const port = parseInt(process.env.PORT || '3000', 10)
 console.log(`[server] Starting on port ${port} | NODE_ENV=${process.env.NODE_ENV}`)
-console.log(`[server] DATABASE_URL=${process.env.DATABASE_URL ? 'set' : 'NOT SET'}`)
+
+if (process.env.DATABASE_URL) {
+  try {
+    const p = new URL(process.env.DATABASE_URL)
+    console.log(`[server] DB host=${p.hostname} port=${p.port} user=${p.username}`)
+  } catch (e) {
+    console.log(`[server] DATABASE_URL set but could not parse: ${e.message}`)
+  }
+} else {
+  console.log('[server] DATABASE_URL NOT SET')
+}
 
 const app = next({ dev: false, dir: __dirname })
 const handle = app.getRequestHandler()
