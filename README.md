@@ -7,7 +7,7 @@ Real-time messaging dashboard for Bitrix24 that receives SendPulse chatbot/live 
 ### 1. Install dependencies
 
 ```bash
-pnpm install
+npm install
 ```
 
 ### 2. Set up environment
@@ -26,7 +26,7 @@ psql $DATABASE_URL -f src/lib/migrations/001_initial.sql
 ### 4. Start the development server
 
 ```bash
-pnpm dev
+npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000).
