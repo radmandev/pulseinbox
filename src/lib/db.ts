@@ -16,7 +16,7 @@ function buildSql(): postgres.Sql {
     port:     parseInt(parsed.port || '5432', 10),
     database: parsed.pathname.replace(/^\//, ''),
     username: parsed.username,
-    password: parsed.password,          // already decoded by new URL()
+    password: decodeURIComponent(parsed.password),  // new URL() doesn't decode non-http schemes
     max:      10,
     idle_timeout:    20,
     connect_timeout: 10,
